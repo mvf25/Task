@@ -67,6 +67,12 @@ public class TaskController {
 		}
 	}
 	
+	@GetMapping("/")
+	public String taskk(){
+		return "Esto rula amigo mio.";
+		
+	}
+	
 	@PutMapping("/updateTask/{id}")
 	public ResponseEntity<Tasks> updateBook(@PathVariable(value="id")int id,@RequestBody Tasks task)
 	{
