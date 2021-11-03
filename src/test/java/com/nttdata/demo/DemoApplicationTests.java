@@ -51,7 +51,7 @@ import com.nttdata.demo.service.TaskService;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class DemoApplicationTests {
+class DemoApplicationTests{
 	
 	@Autowired
 	TaskController con;
@@ -63,12 +63,13 @@ class DemoApplicationTests {
 	private MockMvc mockMvc;
 
 	@Test
-	void contextLoads() {
+	void contextLoads(){
+	
 	}
 	
 	@Test
-	public void checkBuildIDLogic()
-	{
+	public void checkBuildIDLogic(){
+		
 		TaskService lib =new TaskService();
 		Integer id = lib.buildId(1);
 		id.equals(id+1);
@@ -77,12 +78,10 @@ class DemoApplicationTests {
 	}
 	
 	@Test
-	public void addBookTest()
-	{
+	public void addBookTest(){
 		//mock
 		
 		Tasks lib = buildLibrary();
-		when(libraryService.buildId(5));
 		when(libraryService.existeTarea(lib.getId())).thenReturn(false);
 		when(repository.save(any())).thenReturn(lib);
 		ResponseEntity response	=con.addTask(buildLibrary());//step
@@ -91,15 +90,15 @@ class DemoApplicationTests {
 		AddResponse ad= (AddResponse) response.getBody();
 		ad.getId();
 		assertEquals(lib.getId(),ad.getId());
-		assertEquals("Tarea añadida correctamente.",ad.getMensaje());
+		assertEquals("Se ha añadido la tarea correctamente.",ad.getMensaje());
 		
 		//call Mock service from code
 		
 	}
 	
 	@Test
-	public void addBookControllerTest() throws Exception
-	{
+	public void addBookControllerTest() throws Exception{
+		
 		Tasks lib = buildLibrary();
 		ObjectMapper map =new ObjectMapper();
 		String jsonString = map.writeValueAsString(lib);
@@ -109,7 +108,7 @@ class DemoApplicationTests {
 		when(libraryService.existeTarea(lib.getId())).thenReturn(false);
 		when(repository.save(any())).thenReturn(lib);
 		
-		this.mockMvc.perform(post("/addTarea").contentType(MediaType.APPLICATION_JSON)
+		this.mockMvc.perform(post("/addTask").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonString)).andDo(print()).andExpect(status().isCreated())
 		.andExpect(jsonPath("$.id").value(lib.getId()));
 		
@@ -117,46 +116,44 @@ class DemoApplicationTests {
 	
 
 	@Test
-	public void updateBookTest() throws Exception
-	{
-		Tasks lib =buildLibrary();
+	public void updateBookTest() throws Exception{
+		
+		Tasks lib = buildLibrary();
 		ObjectMapper map =new ObjectMapper();
 		String jsonString = map.writeValueAsString(UpdateLibrary());
-		when(libraryService.getTareaById(any())).thenReturn(buildLibrary());
-	this.mockMvc.perform(put("/updateTarea/"+lib.getId()).contentType(MediaType.APPLICATION_JSON)
-	.content(jsonString)).andDo(print()).andExpect(status().isOk())
-	.andExpect(content().json("{\"title\":\"Boot\",\"id\":\"9\",\"description\":\"sfe\",\"hecho\":true\"}"));
+		when(libraryService.getTareaById(lib.getId())).thenReturn(buildLibrary());
+		this.mockMvc.perform(put("/updateTask/"+lib.getId()).contentType(MediaType.APPLICATION_JSON)
+		.content(jsonString)).andDo(print()).andExpect(status().isOk())
+		.andExpect(content().json("{\"title\":\"Boot\",\"id\":30,\"description\":\"rain\",\"hecho\":true}"));
 	
 	}
 	@Test
-	public void deleteBookControllerTest() throws Exception
-	{
-		when(libraryService.getTareaById(any())).thenReturn(buildLibrary());	
+	public void deleteBookControllerTest() throws Exception{
+		
+		when(libraryService.getTareaById(30)).thenReturn(buildLibrary());	
 		doNothing().when(repository).delete(buildLibrary());
 		this.mockMvc.perform(delete("/deleteTask").contentType(MediaType.APPLICATION_JSON)
-		.content("{\"id\" : \"2\"}")).andDo(print())
-		.andExpect(status().isCreated()).andExpect(content().string("Tarea borrada"));
+		.content("{\"id\" :30}")).andDo(print())
+		.andExpect(status().isCreated()).andExpect(content().string("La tarea se ha borrado."));
 		
 		
 	}
 	
-	
-	
-	
-	public Tasks buildLibrary()
-	{
+	public Tasks buildLibrary(){
+		
 		Tasks lib =new Tasks();
-		lib.setId(322);
-		lib.setTitle("Spring");
-		lib.setDescription("sfe");
+		lib.setId(30);
+		lib.setTitle("Sprindg");
+		lib.setDescription("sfde");
 		lib.setHecho(false);
 		return lib;
 		
 	}
-	public Tasks UpdateLibrary()
-	{
+	
+	public Tasks UpdateLibrary(){
+		
 		Tasks lib = new Tasks();
-		lib.setId(322);
+		lib.setId(30);
 		lib.setTitle("Boot");
 		lib.setDescription("rain");
 		lib.setHecho(true);
