@@ -13,6 +13,8 @@ import com.nttdata.demo.service.TaskService;
 
 
 import ch.qos.logback.classic.Logger;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Hidden;
 
 
 @RestController
@@ -87,6 +89,7 @@ public class TaskController {
 		return new ResponseEntity<Tasks>(existeTarea,HttpStatus.OK);
 	}
 	
+	//@Hidden
 	@DeleteMapping("/deleteTask")
 	public ResponseEntity<String> deleteBookById(@RequestBody Tasks task)
 	{
