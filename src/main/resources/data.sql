@@ -5,8 +5,8 @@
 	--hecho BOOLEAN NOT NULL
 --);
 
-INSERT INTO MY_TASKS (id, title,description,hecho) VALUES
-	(1, 'Prueba1','La descripcion de la prueba 1',FALSE),
-	(2, 'Prueba2','La descripcion de la prueba 2',FALSE),
-	(3, 'Prueba3','Esta descripcion si esta a TRUE el campo de done',TRUE);
+INSERT INTO MY_TASKS (id, state,description) VALUES
+	(1, 'Pendiente','La descripcion de la prueba 1'),
+	(2, 'Realizado','La descripcion de la prueba 2'),
+	(3, 'En proceso','Esta descripcion si esta a TRUE el campo de done');
 	

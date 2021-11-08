@@ -1,5 +1,8 @@
 package com.nttdata.demo.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Hidden;
 
 
+
+@CrossOrigin(origins = "*")
 @RestController
 public class TaskController {
 	
@@ -28,7 +33,7 @@ public class TaskController {
 	
 	private static final Logger logger =  (Logger) LoggerFactory.getLogger(TaskController.class);
 	
-	@PostMapping("/addTask")
+	@PostMapping("/tasks")
 	public ResponseEntity addTask(@RequestBody Tasks task){
 
 		AddResponse respuesta = new AddResponse();
@@ -58,11 +63,16 @@ public class TaskController {
 		
 	}
 	
+	@GetMapping("/tasks")
+	public List<Tasks> getTasks() {
+		return (List<Tasks>) repository.findAll();
+	}
+	
 
-	@GetMapping("/getTask/{id}")
+	@GetMapping("/tasks/{id}")
 	public Tasks getTask(@PathVariable (value = "id") int id){
 		try {
-			return repository.findById(id).get();
+			return taskService.getTareaById(id);
 		}
 		catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -75,28 +85,39 @@ public class TaskController {
 		
 	}
 	
-	@PutMapping("/updateTask/{id}")
-	public ResponseEntity<Tasks> updateBook(@PathVariable(value="id")int id,@RequestBody Tasks task)
-	{
 
-		Tasks existeTarea = taskService.getTareaById(id);
+	@PutMapping("/tasks")
+	public ResponseEntity<Tasks> updateTask(@RequestBody Tasks task){
+
+		Tasks existeTarea = taskService.getTareaById(task.getId());
 		
-		existeTarea.setTitle(task.getTitle());
+		existeTarea.setState(task.getState());
 		existeTarea.setDescription(task.getDescription());
-		existeTarea.setHecho(task.isHecho());
-		repository.save(existeTarea);//
-		//
+
+		repository.save(existeTarea);
+		
 		return new ResponseEntity<Tasks>(existeTarea,HttpStatus.OK);
 	}
 	
 	//@Hidden
-	@DeleteMapping("/deleteTask")
-	public ResponseEntity<String> deleteBookById(@RequestBody Tasks task)
+	@DeleteMapping("/tasks")
+	public ResponseEntity<String> deleteTask(@RequestBody Tasks task)
 	{
 		Tasks tarea = taskService.getTareaById(task.getId());
 		repository.delete(tarea);
 		
 		logger.info("Tarea borrada");
+		return new ResponseEntity<>("La tarea se ha borrado.",HttpStatus.CREATED);
+		
+		}
+	
+	@DeleteMapping("/tasksId")
+	public ResponseEntity<String> deleteTaskId(@RequestParam int id)
+	{
+		Tasks tarea = taskService.getTareaById(id);
+		repository.delete(tarea);
+		
+		logger.info("Tarea borrada por id.");
 		return new ResponseEntity<>("La tarea se ha borrado.",HttpStatus.CREATED);
 		
 		}

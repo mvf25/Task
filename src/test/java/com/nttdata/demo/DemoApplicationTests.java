@@ -108,7 +108,7 @@ class DemoApplicationTests{
 		when(libraryService.existeTarea(lib.getId())).thenReturn(false);
 		when(repository.save(any())).thenReturn(lib);
 		
-		this.mockMvc.perform(post("/addTask").contentType(MediaType.APPLICATION_JSON)
+		this.mockMvc.perform(post("/tasks").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonString)).andDo(print()).andExpect(status().isCreated())
 		.andExpect(jsonPath("$.id").value(lib.getId()));
 		
@@ -122,9 +122,9 @@ class DemoApplicationTests{
 		ObjectMapper map =new ObjectMapper();
 		String jsonString = map.writeValueAsString(UpdateLibrary());
 		when(libraryService.getTareaById(lib.getId())).thenReturn(buildLibrary());
-		this.mockMvc.perform(put("/updateTask/"+lib.getId()).contentType(MediaType.APPLICATION_JSON)
+		this.mockMvc.perform(put("/tasks").contentType(MediaType.APPLICATION_JSON)
 		.content(jsonString)).andDo(print()).andExpect(status().isOk())
-		.andExpect(content().json("{\"title\":\"Boot\",\"id\":30,\"description\":\"rain\",\"hecho\":true}"));
+		.andExpect(content().json("{\"id\":30,\"state\":\"realizado\",\"description\":\"rain\"}"));
 	
 	}
 	@Test
@@ -132,7 +132,7 @@ class DemoApplicationTests{
 		
 		when(libraryService.getTareaById(30)).thenReturn(buildLibrary());	
 		doNothing().when(repository).delete(buildLibrary());
-		this.mockMvc.perform(delete("/deleteTask").contentType(MediaType.APPLICATION_JSON)
+		this.mockMvc.perform(delete("/tasks").contentType(MediaType.APPLICATION_JSON)
 		.content("{\"id\" :30}")).andDo(print())
 		.andExpect(status().isCreated()).andExpect(content().string("La tarea se ha borrado."));
 		
@@ -143,9 +143,8 @@ class DemoApplicationTests{
 		
 		Tasks lib =new Tasks();
 		lib.setId(30);
-		lib.setTitle("Sprindg");
+		lib.setState("Sprindg");
 		lib.setDescription("sfde");
-		lib.setHecho(false);
 		return lib;
 		
 	}
@@ -154,9 +153,8 @@ class DemoApplicationTests{
 		
 		Tasks lib = new Tasks();
 		lib.setId(30);
-		lib.setTitle("Boot");
+		lib.setState("realizado");
 		lib.setDescription("rain");
-		lib.setHecho(true);
 		return lib;
 		
 	}

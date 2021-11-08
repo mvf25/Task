@@ -12,12 +12,11 @@ public class Tasks {
 	@Id
 	@Column(name="id")
 	private int id;
-	@Column(name="title")
-	private String title;
+	@Column(name="state")
+	private String state;
 	@Column(name="description")
 	private String description;
-	@Column(name="hecho")
-	private boolean hecho;
+
 	
 	public int getId(){
 		return id;
@@ -27,12 +26,12 @@ public class Tasks {
 		this.id = id;
 	}
 	
-	public String getTitle(){
-		return title;
+	public String getState(){
+		return state;
 	}
 	
-	public void setTitle(String title){
-		this.title = title;
+	public void setState(String state){
+		this.state = state;
 	}
 	
 	public String getDescription(){
@@ -43,13 +42,7 @@ public class Tasks {
 		this.description = description;
 	}
 	
-	public boolean isHecho(){
-		return hecho;
-	}
-	
-	public void setHecho(boolean hecho){
-		this.hecho = hecho;
-	}
+
 
 
 }
